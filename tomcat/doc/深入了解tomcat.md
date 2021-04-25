@@ -1,5 +1,5 @@
-##tomcat总体架构 <br>
-###web容器有两个核心的功能 <br>
+##  tomcat总体架构 <br>
+###  web容器有两个核心的功能 <br>
   1.接收用户请求（处理socket连接，将网络字节流与Request和Response转换）。<br>
   2.处理用户请求（处理转化的Request请求）。<br>
 
@@ -7,9 +7,9 @@ tomcat分别设计了两个核心组件来完成这两件事，**连接器和容
 
 ![tomcat整体架构图](../image/tomcat整体架构图.png)
 
-##连接器 <br>
+## 连接器 <br>
 
-###tomcat支持的网络协议与I/O模型 <br>
+### tomcat支持的网络协议与I/O模型 <br>
 tomcat支持多种网络协议和多种I/O模型，I/O模型和网络协议可以随机组合。
 <br>
 **Tomcat支持的 I/O 模型**<br>
@@ -21,7 +21,7 @@ HTTP/1.1：这是大部分 Web 应用采用的访问协议。<br>
 AJP：用于和 Web 服务器集成（如 Apache）。<br>
 HTTP/2：HTTP 2.0 大幅度的提升了 Web 性能。<br>
 
-###连接器的作用 <br>
+### 连接器的作用 <br>
 1.监听网络端口<br>
 2.接收网络连接请求<br>
 3.读取网络请求字节流<br>
@@ -32,7 +32,7 @@ HTTP/2：HTTP 2.0 大幅度的提升了 Web 性能。<br>
 8.将Tomcat Response对象转化成网络字节流。<br>
 9.将网络字节流返回给浏览器。<br>
 
-##连接器的核心功能 <br>
+## 连接器的核心功能 <br>
 1.网络通信。<br>
 2.应用层协议解析。<br>
 3.Tomcat Request与ServletRequest、Tomcat Response与ServletResponse之间的转化。<br>
@@ -60,12 +60,12 @@ ProtocolHandler已经包含了Endpoint和Processor。<br>
 **protocolHandler继承关系图**<br>
 ![protocolHandler继承关系图](../image/protocolHandler继承关系图.png)
 
-##容器 <br>
+## 容器 <br>
 
-###容器的作用 <br>
+### 容器的作用 <br>
 负责加载和管理Servlet，接收连接器传递过来的ServletRequset请求，交给具体Servlet处理，并且将处理结果通过ServletResponse返回。<br>
 
-###容器的层次结构 <br>
+### 容器的层次结构 <br>
 Tomcat设计了4种容器，Engin、Host、Context、Wrapper，容器之间是父子关系。<br>
 ![容器关系图](../image/容器关系图.png)
 Context 表示一个 Web 应用程序；Wrapper 表示一个 Servlet，一个 Web 应用程序中可能会有多个Servlet；Host 代表的是一个虚拟主机，或者说一个站点，可以给 Tomcat 配 置多个虚拟主机地址，而一个虚拟主机下可以部署多个 Web 应用程序；Engine 表示引擎，用来管理多个虚拟站点，一个 Service 最多只能有一个 Engine。<br>
@@ -90,7 +90,7 @@ public interface Lifecycle {
 
 ```
 
-###容器如何定位Servlet<br>
+### 容器如何定位Servlet<br>
 容器通过Mapper组件根据用户访问的URL定位到一个Servlet。<br>
 Mapper 组件里保存了 Web 应用的配置信息，其实就是容器组件与访问路径的映射关系， 比如 Host 容器里配置的域名、Context 容器里的 Web 应用路径，以及 Wrapper 容器里 Servlet 映射的路径，你可以想象这些配置信息就是一个多层次的 Map。<br>
 ![如何定位Servlet](../image/如何定位Servlet.png)<br>
@@ -111,11 +111,11 @@ Tomcat容器之间是父子关系，当接收到一个ServletRquest会在容器�
 
 
 
-##tomcat启动流程 <br>
+## tomcat启动流程 <br>
 ![tomcat整体架构图](../image/tomcat启动流程图.png)
 
-##连接器初始化流程 <br>
+## 连接器初始化流程 <br>
 ![连接器初始化流程](../image/连接器初始化流程.png)
 
-##连接器启动流程 <br>
+## 连接器启动流程 <br>
 ![连接器启动流程](../image/连接器启动流程.png)
