@@ -90,5 +90,32 @@ public interface Lifecycle {
 
 ```
 
+###容器如何定位Servlet<br>
+容器通过Mapper组件根据用户访问的URL定位到一个Servlet。<br>
+Mapper 组件里保存了 Web 应用的配置信息，其实就是容器组件与访问路径的映射关系， 比如 Host 容器里配置的域名、Context 容器里的 Web 应用路径，以及 Wrapper 容器里 Servlet 映射的路径，你可以想象这些配置信息就是一个多层次的 Map。<br>
+![如何定位Servlet](../image/如何定位Servlet.png)<br>
+
+假如有用户访问一个 URL，比如图中的 http://user.shopping.com:8080/order/buy，Tomcat 如何将这个 URL 定位到一 个 Servlet 呢？<br>
+**首先，根据协议和端口号选定 Service 和 Engine。**<br>
+我们知道 Tomcat 的每个连接器都监听不同的端口，比如 Tomcat 默认的 HTTP 连接器监 听 8080 端口、默认的 AJP 连接器监听 8009 端口。上面例子中的 URL 访问的是 8080 端 口，因此这个请求会被 HTTP 连接器接收，而一个连接器是属于一个 Service 组件的，这 样 Service 组件就确定了。我们还知道一个 Service 组件里除了有多个连接器，还有一个容 器组件，具体来说就是一个 Engine 容器，因此 Service 确定了也就意味着 Engine 也确定了。<br>
+**然后，根据域名选定 Host。**<br>
+Service 和 Engine 确定后，Mapper 组件通过 URL 中的域名去查找相应的 Host 容器，比 如例子中的 URL 访问的域名是user.shopping.com，因此 Mapper 会找到 Host2 这个
+容器。<br>
+**之后，根据 URL 路径找到 Context 组件。**<br>
+Host 确定以后，Mapper 根据 URL 的路径来匹配相应的 Web 应用的路径，比如例子中访 问的是 /order，因此找到了 Context4 这个 Context 容器。<br>
+**最后，根据 URL 路径找到 Wrapper（Servlet）。**<br>
+Context 确定后，Mapper 再根据 web.xml 中配置的 Servlet 映射路径来找到具体的 Wrapper 和 Servlet。<br>
+
+Tomcat容器之间是父子关系，当接收到一个ServletRquest会在容器之间传递，首先会经过Engin容器，再到Host容器，然后是Context容器，最后是Wrapper容器。<br>
+每一层的容器都会对ServletRequest做一些处理，用到了责任链模式。具体的实现方式是使用了 Pipeline-Valve 管道。<br>
+
+
+
 ##tomcat启动流程 <br>
 ![tomcat整体架构图](../image/tomcat启动流程图.png)
+
+##连接器初始化流程 <br>
+![连接器初始化流程](../image/连接器初始化流程.png)
+
+##连接器启动流程 <br>
+![连接器启动流程](../image/连接器启动流程.png)
