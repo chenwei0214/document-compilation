@@ -1,3 +1,32 @@
+## Servlet规范与Servlet容器 <br>
+### 什么是web容器 <br>
+ web容器是 http服务器 与 Servlet容器 的组合。http负责接收和响应用户http请求，具体处理业务的流程交给servlet容器。<br>
+ **Servlet 接口** <br>
+ ```
+public interface Servlet {    
+    void init(ServletConfig config) throws ServletException;        
+    ServletConfig getServletConfig();        
+    void service(ServletRequest req, ServletResponse res）throws ServletException, IOException        
+    String getServletInfo();      
+    void destroy(); 
+}
+```
+<br>
+其中最重要是的 service 方法，具体业务类在这个方法里实现处理逻辑。<br>
+这个方法有两个参数：ServletRequest 和 ServletResponse。ServletRequest 用来封装请求信息， <br>
+ServletResponse 用来封装响应信息，因此本质上这两个类是对通信协议的封装。<br>
+比如 HTTP 协议中的请求和响应就是对应了 HttpServletRequest 和 HttpServletResponse 这两个类。<br>
+你可以通过 HttpServletRequest 来获取所有请求相关 的信息，包括请求路径、Cookie、HTTP 头、请求参数等。<br>
+我们还可以通过 HttpServletRequest 来创建和获取 Session。而 HttpServletResponse 是用来封装 HTTP 响应的。<br>
+你可以看到接口中还有两个跟生命周期有关的方法 init 和 destroy，<br>
+Servlet 容器在加载 Servlet 类的时候会调用 init 方法，在卸载的时候会调用 destroy 方法。<br>
+我们可能会在 init 方法里初始化一些资源，并在 destroy 方法里释放这些资源，<br>
+比 如 Spring MVC 中的 DispatcherServlet，就是在 init 方法里创建了自己的 Spring 容器。<br>
+ServletConfig 的作用就是封装 Servlet 的初始化参 数。<br>
+可以在 web.xml 给 Servlet 配置参数，并在程序里通过 getServletConfig 方法拿到 这些参数。<br>
+Servlet 规范提供了 GenericServlet 抽象类，我们可以通过扩展它来实现 Servlet。基于http协议的实现类HttpServlet。<br>
+我们通过继承 HttpServlet 类来实现自己的 Servlet，只需要重写两个方法：doGet 和 doPost。<br> 
+ 
 ##  tomcat总体架构 <br>
 ###  web容器有两个核心的功能 <br>
   1.接收用户请求（处理socket连接，将网络字节流与Request和Response转换）。<br>
