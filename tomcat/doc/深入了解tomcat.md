@@ -26,6 +26,15 @@ ServletConfig 的作用就是封装 Servlet 的初始化参 数。<br>
 可以在 web.xml 给 Servlet 配置参数，并在程序里通过 getServletConfig 方法拿到 这些参数。<br>
 Servlet 规范提供了 GenericServlet 抽象类，我们可以通过扩展它来实现 Servlet。基于http协议的实现类HttpServlet。<br>
 我们通过继承 HttpServlet 类来实现自己的 Servlet，只需要重写两个方法：doGet 和 doPost。<br> 
+
+ ### 容器的扩展机制 Filter和Listener  <br>
+ **Filter是过滤器**，这个接口允许你对请求和响应做一些统一的定制化处理。<br>
+ 过滤器的工作原理是这样的：Web 应用部署完成后，Servlet 容器需要实例化 Filter 并把 Filter 链接成一个 FilterChain。<br>
+ 当请求进来时，获取第一个 Filter 并调用 doFilter 方法，doFilter 方法负责 调用这个 FilterChain 中的下一个 Filter。<br>
+ **Listener是监听器**，当 Web 应用在 Servlet 容器中运行时，Servlet 容器内部会不断的发生各种事件，如 Web 应用的启动和停止、用户请求到达等。<br>
+ Servlet容器提供了一些默认的监听器来监听这些事件，当事件发生时，Servlet 容器会负责调用监听器的方法。<br>
+ 可以定义自己的监听器去监听你感兴趣的事件，将监听器配置在 web.xml 中。比如 Spring 就实现了自己的监听器，来监听 ServletContext 的启动事件， <br>
+ 目的是当 Servlet 容器启动时，创建并初始化全局的 Spring 容器。<br>
  
 ##  tomcat总体架构 <br>
 ###  web容器有两个核心的功能 <br>
